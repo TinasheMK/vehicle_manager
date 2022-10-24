@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="c405e1c8-f9f9-4bb7-a5b0-3ae9c5fc16e4" name="Default Changelist" comment="" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ProjectId" id="1tTOqFuhuICrhaLg54ScUM9rSeN" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showExcludedFiles" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="last_opened_file_path" value="F:/RealStateDjango/RealStateMgmt" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="F:\djangoGurukul\VehicleParkingDjango\VehicleParking\vehicle\templates" />
+      <recent name="F:\djangoGurukul\VehicleParkingDjango\VehicleParking\vehicle\static" />
+    </key>
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="c405e1c8-f9f9-4bb7-a5b0-3ae9c5fc16e4" name="Default Changelist" comment="" />
+      <created>1622789801840</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1622789801840</updated>
+    </task>
+    <servers />
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="413" y="66" key="FileChooserDialogImpl" timestamp="1623086483787">
+      <screen x="0" y="0" width="1366" height="728" />
+    </state>
+    <state x="413" y="66" key="FileChooserDialogImpl/0.0.1366.728@0.0.1366.728" timestamp="1623086483787" />
+    <state x="309" y="152" key="com.intellij.ide.util.TipDialog" timestamp="1623045925440">
+      <screen x="0" y="0" width="1366" height="728" />
+    </state>
+    <state x="309" y="152" key="com.intellij.ide.util.TipDialog/0.0.1366.728@0.0.1366.728" timestamp="1623045925440" />
+  </component>
+</project>

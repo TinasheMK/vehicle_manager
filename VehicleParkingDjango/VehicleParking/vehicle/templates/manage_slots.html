@@ -1,0 +1,74 @@
+{% load static %}
+<html>
+<head>
+{% include 'headeradmin.html' %}
+
+</head>
+<body>
+{% include 'nav2admin.html' %}
+<br> &nbsp;&nbsp;Welcome <b style = 'text-transform : capitalize ; color : blue'>{{request.user.username}}</b>
+
+
+<div class="container" style = "margin-top:50px">
+<h2 class="text-center" style = "font-family : Monotype Corsiva ; color : red"><strong>Add</strong> Slots</h2>
+
+<div class="form-group">
+    <form method = POST action="/parking_slot" enctype = "multipart/form-data">
+        {% csrf_token %}
+        <label ><b>Slot Number/ID</b></label>
+        <input type="text" name="slot" placeholder="Slot number" class="form-control" required="">
+
+        <label  ><b>Short Description</b></label>
+        <input type="text"  name="desc" placeholder="Short Description" class="form-control"  required="">
+        <br>
+        <input type = submit name = submit value = "Submit" class="btn btn-primary form-control" >
+    </form>
+</div>
+
+<div class="container" style = "margin-top:10px">
+    <h2 class="text-center" style = "font-family : Monotype Corsiva ; color : red">Available Slots</h2>
+    <table class='table table-hover' id = example>
+      <thead style = 'background-color : red ; color : white'>
+        <tr>
+          <th>Slot No.</th>
+          <th>Description</th>
+          <th>Status</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        {% for i in slots %}
+        <tr>
+          <td>{{i.slot}}</td>
+          <td>{{i.desc}}</td>
+          <td>{{i.status}}</td>
+          <td>
+            <form method = POST action="/parking_slot/delete" enctype = "multipart/form-data">
+              {% csrf_token %}
+              <input type="hidden"  name="slot" placeholder="Short Description" class="form-control" value="{{i.id}}" required="">
+              <button type = submit name = submit value = "Submit" class="btn btn-primary form-control" >Delete</button>
+            </form>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+
+</div>
+</body>
+</html>
+{% comment %} {% ifequal error "no" %}
+<script>
+    alert('Vehicle Detail has been added');
+    // window.location=('{% url 'manage_incomingvehicle' %}');
+</script>
+{% endifequal %}
+{% ifequal error "yes" %}
+<script>
+    alert('Something Went Wrong. Please try again');
+</script>
+{% endifequal %} {% endcomment %}
+
