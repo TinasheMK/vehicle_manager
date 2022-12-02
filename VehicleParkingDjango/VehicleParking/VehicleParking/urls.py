@@ -32,25 +32,45 @@ path('about',about,name='about'),
 path('contact',contact,name='contact'),
 path('admin_login',admin_login,name='admin_login'),
 path('admin_home',admin_home,name='admin_home'),
+
 path('logout',Logout,name='logout'),
+
+path('login',Login,name='login'),
+path('register',register,name='register'),
+
 path('change_password',change_password,name='change_password'),
+
 path('add_category',add_category,name='add_category'),
 path('manage_category',manage_category,name='manage_category'),
 path('delete_category/<int:pid>', delete_category,name='delete_category'),
 path('edit_category/<int:pid>',edit_category,name='edit_category'),
+
 path('add_vehicle',add_vehicle,name='add_vehicle'),
 path('manage_incomingvehicle',manage_incomingvehicle,name='manage_incomingvehicle'),
 path('manage_slots',manage_slots,name='manage_slots'),
+
 path('view_incomingdetail/<int:pid>',view_incomingdetail,name='view_incomingdetail'),
 path('manage_outgoingvehicle',manage_outgoingvehicle,name='manage_outgoingvehicle'),
 path('view_outgoingdetail/<int:pid>',view_outgoingdetail,name='view_outgoingdetail'),
+
 path('print/<int:pid>',print_detail,name='print'),
 path('search',search,name='search'),
 path('betweendate_report',betweendate_report,name='betweendate_report'),
 path('betweendate_reportdetails',betweendate_reportdetails,name='betweendate_reportdetails'),
 
+
+#################### API   #####################
+
 path('parking_slot',slot,name='slots'),
 path('parking_slot/update',slotUpdate,name='slotUpdate'),
 path('parking_slot/delete',slotDelete,name='slotDelete'),
+
+path('current_booking/<username>',current_booking,name='current_booking'),
+
+path('checkout/<int:pid>',view_incomingdetail_api,name='checkout'),
+path('categories',categories,name='categories'), 
+
+path('receipts/<username>',receipts_api,name='receipts'),
+path('receipt/<int:pid>',print_detail_api,name='receipt')
 
 ]

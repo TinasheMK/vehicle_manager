@@ -8,6 +8,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth import login,logout,authenticate
 from django.contrib import messages
 from datetime import date
+from django.contrib.auth import authenticate
 from datetime import datetime, timedelta, time
 import random
 from rest_framework.viewsets import ModelViewSet
@@ -123,6 +124,11 @@ def manage_category(request):
     d = {'category':category}
     return render(request, 'manage_category.html', d)
 
+def categories(request):
+    category = Category.objects.all()
+    data = list(category.values())
+    return JsonResponse(data, safe=False)
+
 
 def delete_category(request,pid):
     #if not request.user.is_authenticated:
@@ -157,32 +163,31 @@ def add_vehicle(request):
     error = ""
     category1 = Category.objects.all()
     if request.method=="POST":
+        data = json.loads(request.body)
         # print()
         pn = str(random.randint(10000000, 99999999))
-        # ct = request.body.get('category')
-
-
-        # vc = request.body.get('vehiclecompany')
-        # rn = request.body.get('regno')
-        # slot = request.body.get('parkingSlot')
-        # on = request.body.get('ownername')
-        # oc = request.body.get('ownercontact')
-        # pd = request.body.get('pdate')
-        # it = request.body.get('intime')
+        ct =  data['category']
+        vc =  data['vehiclecompany']
+        rn =  data['regno']
+        slot= data['parkingSlot']
+        on =  data['ownername']
+        oc =  data['ownercontact']
+        pd =  data['pdate']
+        it =  data['intime']
         status = "In"
 
-        # category = Category.objects.get(categoryname=ct)
-        data = JSONDecodeError(request.body)
-        
-        print(data)
-        try:
-            Vehicle.objects.create(parkingnumber=pn,category=category,vehiclecompany=vc,regno=rn,ownername=on,ownercontact=oc,pdate=pd,intime=it,outtime='',parkingslot = slot,parkingcharge='',remark='',status=status)
-            error = "no"
-        except:
-            error = "yes"
-    d = {'error':error,'category1':category1}
+        category = Category.objects.get(categoryname=ct)
+        slot = Slot.objects.get(slot=slot)
+        if slot.status == "UNAVAILABLE":
+            d = {'response':error,'message':'slot unavailable'}
+            return JsonResponse(d, safe=False)
+
+        Vehicle.objects.create(parkingnumber=pn,category=category,vehiclecompany=vc,regno=rn,ownername=on,ownercontact=oc,pdate=pd,intime=it,outtime='',parkingslot = slot,parkingcharge='',remark='',status=status)
+        slot.status= "UNAVAILABLE"
+        slot.save()
+    d = {'response':error,'message':'successfully booked'}
     # return render(request, 'add_vehicle.html', d)
-    return JsonResponse(["Success"], safe=False)
+    return JsonResponse(d, safe=False)
 
 def manage_incomingvehicle(request):
     #if not request.user.is_authenticated:
@@ -221,6 +226,67 @@ def view_incomingdetail(request,pid):
     d = {'vehicle': vehicle}
     return render(request,'view_incomingdetail.html', d)
 
+@csrf_exempt
+def view_incomingdetail_api(request,pid):
+    vehicle = Vehicle.objects.get(id=pid)
+    json_data = json.loads(request.body)
+    error = "Nothing happpened"
+    if request.method == 'POST':
+        rm = json_data['remark']
+        ot = json_data['outtime']
+        pc = json_data['parkingcharge']
+        status = "Out"
+        try:
+            vehicle.remark = rm
+            vehicle.outtime = ot
+            vehicle.parkingcharge = pc
+            vehicle.status = status
+            vehicle.save()
+            error = "Checkout successful"
+        except:
+            error = "Checkout failed"
+
+    
+    return JsonResponse({"resp" : error}, safe=False)
+
+def current_booking(request,username):
+    # if not request.user.is_authenticated:
+    #     return redirect('admin_home')
+    # error = ""
+    print(request.body)
+    vehicle = Vehicle.objects.get(ownername=username, status="In")
+    error = "Success"
+    if request.method == 'POST':
+        rm = request.POST['remark']
+        ot = request.POST['outtime']
+        pc = request.POST['parkingcharge']
+        status = "Out"
+        try:
+            vehicle.remark = rm 
+            vehicle.outtime = ot
+            vehicle.parkingcharge = pc
+            vehicle.status = status
+            vehicle.save()
+            error = "no"
+        except:
+            error = "yes"
+
+
+
+
+
+    data = {
+       "parkingNumber": vehicle.parkingnumber,
+       "parkingSlot": vehicle.parkingslot ,
+       "intime": vehicle.intime
+       }
+
+    obj = {
+    "data": data,
+    "response": error
+    }
+    return JsonResponse(  obj, safe=False)
+
 
 def manage_outgoingvehicle(request):
     #if not request.user.is_authenticated:
@@ -228,6 +294,12 @@ def manage_outgoingvehicle(request):
     vehicle = Vehicle.objects.filter(status="Out")
     d = {'vehicle':vehicle}
     return render(request, 'manage_outgoingvehicle.html', d)
+
+def receipts_api(request, username):
+    vehicles = Vehicle.objects.filter(ownername=username,status="Out")
+
+    data = list(vehicles.values())
+    return JsonResponse(data, safe=False)
 
 
 def view_outgoingdetail(request,pid):
@@ -246,6 +318,13 @@ def print_detail(request,pid):
 
     d = {'vehicle': vehicle}
     return render(request,'print.html', d)
+
+def print_detail_api(request,pid):
+    vehicle = Vehicle.objects.get(id=pid)
+
+    data = {'vehicle': vehicle}
+
+    return JsonResponse(data, safe=False)
 
 
 def search(request):
@@ -295,8 +374,6 @@ def slot(request):
 
     if request.method == "GET":
         slots = Slot.objects.all()
-        # print(slots)
-        # slots_json = serializers.serialize('json', slots)
         data = list(slots.values())
         return JsonResponse(data, safe=False)
         
@@ -321,3 +398,33 @@ def slotDelete(request):
         u = Slot.objects.get(id=slotId) 
         u.delete()
         return redirect('manage_slots')
+
+@csrf_exempt
+def register(request):
+    json_data = json.loads(request.body)
+    # print(json_data['name'])
+    user = User.objects.create_user(
+        json_data['name'],
+        json_data['email'], 
+        json_data['password'])
+    user.save()
+    return JsonResponse(["Success"], safe=False)
+
+@csrf_exempt
+def Login(request):
+    json_data = json.loads(request.body)
+    user = authenticate(username=json_data['name'], password=json_data['password'])
+    # user = authenticate(username='john', password='secret')
+    if user is not None:
+        # data = list(user.values())
+         
+        # # data = json.dumps('json',user)
+        # data = serializers.serialize('json', [ user ])
+        print(user)
+        obj = {
+            "name": user.get_username(),
+            # "id": user.get_email_field_name()
+        }
+        return JsonResponse(  obj, safe=False)
+    else:
+        return JsonResponse(["Login failed"], safe=False)

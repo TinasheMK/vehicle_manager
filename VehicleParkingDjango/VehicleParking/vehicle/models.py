@@ -24,6 +24,7 @@ class Vehicle(models.Model):
     vehiclecompany = models.CharField(max_length=50)
     regno = models.CharField(max_length=10)
     ownername = models.CharField(max_length=50)
+    ownerId = models.CharField(max_length=50)
     ownercontact = models.CharField(max_length=15)
     pdate = models.DateField()
     intime = models.CharField(max_length=50)
