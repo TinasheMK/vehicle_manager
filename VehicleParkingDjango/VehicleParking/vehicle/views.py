@@ -181,6 +181,9 @@ def add_vehicle(request):
         if slot.status == "UNAVAILABLE":
             d = {'response':error,'message':'slot unavailable'}
             return JsonResponse(d, safe=False)
+        if Vehicle.objects.get(ownername=on).exists():
+            d = {'response':error,'message':'You are already booked on another slot.'}
+            return JsonResponse(d, safe=False)
 
         Vehicle.objects.create(parkingnumber=pn,category=category,vehiclecompany=vc,regno=rn,ownername=on,ownercontact=oc,pdate=pd,intime=it,outtime='',parkingslot = slot,parkingcharge='',remark='',status=status)
         slot.status= "UNAVAILABLE"
