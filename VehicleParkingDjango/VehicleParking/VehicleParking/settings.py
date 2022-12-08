@@ -26,7 +26,7 @@ SECRET_KEY = 'k#ml=nk$b4j%qb036=193wx^o%bhy58+z&(w%)d!%vx^fp*ob$'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['tinashemk.pythonanywhere.com', "http://tinashemk.pythonanywhere.com"]
+ALLOWED_HOSTS = ['tinashemk.pythonanywhere.com', "http://tinashemk.pythonanywhere.com", "127.0.0.1"]
 
 
 # Application definition

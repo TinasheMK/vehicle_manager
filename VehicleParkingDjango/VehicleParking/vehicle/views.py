@@ -181,7 +181,7 @@ def add_vehicle(request):
         if slot.status == "UNAVAILABLE":
             d = {'response':error,'message':'slot unavailable'}
             return JsonResponse(d, safe=False)
-        if Vehicle.objects.filter(ownername=on).count() > 0:
+        if Vehicle.objects.filter(ownername=on, status="In").count() > 0:
             d = {'response':error,'message':'You are already booked on another slot.'}
             return JsonResponse(d, safe=False)
 
@@ -211,6 +211,7 @@ def view_incomingdetail(request,pid):
     #     return redirect('admin_home')
     # error = ""
     vehicle = Vehicle.objects.get(id=pid)
+    slot = Slot.objects.get(slot=vehicle.parkingslot)
     if request.method == 'POST':
         rm = request.POST['remark']
         ot = request.POST['outtime']
@@ -222,9 +223,16 @@ def view_incomingdetail(request,pid):
             vehicle.parkingcharge = pc
             vehicle.status = status
             vehicle.save()
+
+
             error = "no"
         except:
             error = "yes"
+        # try:
+        slot.status = "AVAILABLE"
+        slot.save()
+        # except:
+        #     error ="eys"
 
     d = {'vehicle': vehicle}
     return render(request,'view_incomingdetail.html', d)
@@ -257,8 +265,22 @@ def current_booking(request,username):
     #     return redirect('admin_home')
     # error = ""
     print(request.body)
-    vehicle = Vehicle.objects.get(ownername=username, status="In")
     error = "Success"
+    try:
+        vehicle = Vehicle.objects.get(ownername=username, status="In")
+    except Vehicle.DoesNotExist:
+        error = "Error"
+        data = {
+       "parkingNumber": "none",
+       "parkingSlot": "none" ,
+       "intime": "none"
+       }
+
+        obj = {
+        "data": data,
+        "response": error
+        }
+        return JsonResponse(  obj, safe=False)
     if request.method == 'POST':
         rm = request.POST['remark']
         ot = request.POST['outtime']
