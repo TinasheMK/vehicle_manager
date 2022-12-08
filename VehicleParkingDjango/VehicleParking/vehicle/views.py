@@ -181,7 +181,7 @@ def add_vehicle(request):
         if slot.status == "UNAVAILABLE":
             d = {'response':error,'message':'slot unavailable'}
             return JsonResponse(d, safe=False)
-        if Vehicle.objects.get(ownername=on).count() > 0:
+        if Vehicle.objects.filter(ownername=on).count() > 0:
             d = {'response':error,'message':'You are already booked on another slot.'}
             return JsonResponse(d, safe=False)
 
